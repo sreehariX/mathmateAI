@@ -108,6 +108,13 @@ This is the main source code repository for [mathmateAI]. It contains both the f
 6. **Verify Installation**
    - API will be running at: `http://localhost:8000`
    - Access API documentation: `http://localhost:8000/docs`
+  
+
+
+### Razorpay Integration 
+- Integrated Razorpay to donate for me but right now it is only in test mode i.e you can send fake money not real money
+- Because for razorpay i need business verification
+- You can try to send dummy money i am happy to recieve fake money hahahaha
 
 
 ### 📚 In-Depth Documentation
