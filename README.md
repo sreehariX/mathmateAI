@@ -9,7 +9,7 @@ This is the main source code repository for [mathmateAI]. It contains both the f
 
 [mathmateAI]: https://mathmate-ai.vercel.app/
 [Getting Started]: #quick-start
-[Documentation]: #documentation 
+[Documentation]: https://mathmate-docs.vercel.app/
 [Website]:https://mathmate-ai.vercel.app/
 
 ## Why MathMate?
@@ -114,7 +114,7 @@ This is the main source code repository for [mathmateAI]. It contains both the f
 
 For comprehensive documentation about the project architecture, hosting and APIs visit our Docusaurus documentation site:
 
-🔗 [MathMate AI Documentation](https://docs.mathmate.ai)
+🔗 [MathMate AI Documentation](https://mathmate-docs.vercel.app/)
 
 The documentation includes:
 - Detailed API references
