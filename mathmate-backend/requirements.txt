@@ -5,3 +5,7 @@ pix2tex
 uvicorn
 google-generativeai
 python-dotenv
+sqlalchemy
+google-auth
+google-auth-oauthlib
+requests

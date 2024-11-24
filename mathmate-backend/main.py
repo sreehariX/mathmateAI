@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, Form
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from PIL import Image
@@ -10,6 +10,11 @@ from pydantic import BaseModel
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from dotenv import load_dotenv
+from sqlalchemy import create_engine, Column, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from datetime import datetime
+from sqlalchemy.orm import Session
 
 # Load environment variables
 load_dotenv()
@@ -152,6 +157,34 @@ class TextEquationRequest(BaseModel):
 class GoogleToken(BaseModel):
     id_token: str
 
+# Database setup
+SQLALCHEMY_DATABASE_URL = "sqlite:///./users.db"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+# User model
+class User(Base):
+    __tablename__ = "users"
+
+    google_id = Column(String, primary_key=True)
+    email = Column(String, unique=True, index=True)
+    name = Column(String)
+    picture = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    last_login = Column(DateTime, default=datetime.utcnow)
+
+# Create tables
+Base.metadata.create_all(bind=engine)
+
+# Dependency to get DB session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 @app.post("/solve-equation/")
 async def solve_equation(
     file: UploadFile = File(...),
@@ -253,26 +286,39 @@ async def health_check():
 
 # Add this new endpoint with your existing endpoints
 @app.post("/auth/google")
-async def google_auth(token: GoogleToken):
+async def google_auth(token: GoogleToken, db: Session = Depends(get_db)):
     try:
-        # Print token for debugging
-        print("Received token:", token.id_token[:20] + "...")  # Print first 20 chars for safety
-        
         # Verify the token
         idinfo = id_token.verify_oauth2_token(
             token.id_token,
             requests.Request(),
             GOOGLE_CLIENT_ID,
-            clock_skew_in_seconds=60  # Add some tolerance for time differences
+            clock_skew_in_seconds=60
         )
         
-        # Verify issuer
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Invalid issuer')
-            
-        # Print verified info for debugging
-        print("Verified user email:", idinfo.get('email'))
         
+        # Create or update user in database
+        user = db.query(User).filter(User.google_id == idinfo['sub']).first()
+        
+        if user:
+            # Update existing user
+            user.last_login = datetime.utcnow()
+            user.name = idinfo.get('name')
+            user.picture = idinfo.get('picture')
+        else:
+            # Create new user
+            user = User(
+                google_id=idinfo['sub'],
+                email=idinfo['email'],
+                name=idinfo.get('name'),
+                picture=idinfo.get('picture')
+            )
+            db.add(user)
+            
+        db.commit()
+            
         return {
             "status": "success",
             "user": {
@@ -283,8 +329,8 @@ async def google_auth(token: GoogleToken):
             }
         }
     except ValueError as e:
-        print("Verification error:", str(e))  # Log the error
+        print("Verification error:", str(e))
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        print("Unexpected error:", str(e))  # Log the error
+        print("Unexpected error:", str(e))
         raise HTTPException(status_code=500, detail="Internal server error")

@@ -77,4 +77,6 @@ __pycache__/
 # TypeScript
 *.tsbuildinfo
 
-.bolt
+# SQLite database
+*.db
+*.db-journal

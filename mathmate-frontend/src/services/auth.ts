@@ -2,7 +2,6 @@ import { GoogleCredentialResponse } from '@react-oauth/google';
 import { User } from '../types/auth';
 
 const API_URL = import.meta.env.VITE_API_URL;
-
 export const authService = {
   async googleLogin(response: GoogleCredentialResponse): Promise<User> {
     const res = await fetch(`${API_URL}/auth/google`, {
