@@ -13,6 +13,7 @@ interface AppState {
   addMessage: (message: Message) => void;
   addGraph: (graph: Graph) => void;
   toggleTheme: () => void;
+  setMessages: (messages: Message[]) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -74,4 +75,5 @@ export const useStore = create<AppState>((set) => ({
             },
       },
     })),
+  setMessages: (messages) => set({ messages }),
 }));

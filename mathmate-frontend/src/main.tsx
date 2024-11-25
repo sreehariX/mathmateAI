@@ -6,13 +6,24 @@ import './index.css'
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
+if (!GOOGLE_CLIENT_ID) {
+  console.error('Missing GOOGLE_CLIENT_ID environment variable');
+}
 
-const root = createRoot(document.getElementById('root')!);
+console.log('App initialization starting...');
 
-root.render(
-  <StrictMode>
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <App />
-    </GoogleOAuthProvider>
-  </StrictMode>
-);
+try {
+  const root = createRoot(document.getElementById('root')!);
+
+  root.render(
+    <StrictMode>
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID || ''}>
+        <App />
+      </GoogleOAuthProvider>
+    </StrictMode>
+  );
+  
+  console.log('App rendered successfully');
+} catch (error) {
+  console.error('Failed to render app:', error);
+}

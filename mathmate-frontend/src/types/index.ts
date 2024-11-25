@@ -6,6 +6,8 @@ export interface Message {
   latex?: string;
   imageUrl?: string;
   error?: boolean;
+  isExample?: boolean;
+  exampleText?: string;
 }
 
 export interface ChatInputProps {
@@ -15,6 +17,9 @@ export interface ChatInputProps {
 
 export interface MessageListProps {
   messages: Message[];
+  isLoading?: boolean;
+  loadingStartTime?: number;
+  onSendMessage: (content: string, imageUrl?: string) => void;
 }
 
 export interface Graph {

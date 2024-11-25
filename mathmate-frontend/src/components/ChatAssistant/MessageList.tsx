@@ -11,20 +11,35 @@ interface MessageListProps {
   messages: Message[];
   isLoading?: boolean;
   loadingStartTime?: number;
+  onSendMessage: (content: string, imageUrl?: string) => void;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ messages, isLoading, loadingStartTime }) => {
+const MessageList: React.FC<MessageListProps> = ({ messages, isLoading, loadingStartTime, onSendMessage }) => {
+  const handleExampleClick = (message: Message) => {
+    if (message.isExample) {
+      if (message.exampleText) {
+        onSendMessage(message.exampleText);
+      } else if (message.imageUrl) {
+        onSendMessage("", message.imageUrl);
+      }
+    }
+  };
+
   return (
     <div className="space-y-4 p-4">
       {messages.map((message) => (
         <div
           key={message.id}
           className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+          onClick={() => message.isExample && handleExampleClick(message)}
+          style={{ cursor: message.isExample ? 'pointer' : 'default' }}
         >
           <div
             className={`max-w-[80%] rounded-lg p-4 ${
               message.type === 'user'
                 ? 'bg-blue-500 text-white'
+                : message.isExample
+                ? 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer'
                 : 'bg-gray-100 dark:bg-gray-800'
             }`}
           >
@@ -76,7 +91,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading, loadingS
           </div>
         </div>
       ))}
-      {isLoading && <LoadingIndicator startTime={loadingStartTime} />}
+      {isLoading && loadingStartTime && <LoadingIndicator startTime={loadingStartTime} />}
     </div>
   );
 };

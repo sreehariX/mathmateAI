@@ -7,13 +7,20 @@ import { chatService } from '../../services/api';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuthStore } from '../../store/auth';
 import { AuthGuard } from '../auth/AuthGuard';
+import { INITIAL_MESSAGES } from '../../constants/initialMessages';
 
 const ChatAssistant: React.FC<{ onProtectedClick: () => void }> = ({ onProtectedClick }) => {
-  const { messages, addMessage, freeRequestsLeft, setFreeRequestsLeft } = useStore();
+  const { messages, addMessage, freeRequestsLeft, setFreeRequestsLeft, setMessages } = useStore();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStartTime, setLoadingStartTime] = useState<number>();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      setMessages(INITIAL_MESSAGES);
+    }
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -97,6 +104,7 @@ const ChatAssistant: React.FC<{ onProtectedClick: () => void }> = ({ onProtected
           messages={messages} 
           isLoading={isLoading}
           loadingStartTime={loadingStartTime}
+          onSendMessage={handleSendMessage}
         />
         <div ref={messagesEndRef} />
       </div>
