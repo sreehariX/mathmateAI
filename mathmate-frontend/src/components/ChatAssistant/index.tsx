@@ -84,7 +84,7 @@ const ChatAssistant: React.FC<{ onProtectedClick: () => void }> = ({ onProtected
     } catch (error) {
       const errorMessage: Message = {
         id: uuidv4(),
-        content: 'Sorry, there was an error processing your request. Please try again.',
+        content: 'Sorry, there was an error processing your request. Most likely our free Gemini API credits are over. We\'ll be upgrading soon.',
         type: 'assistant',
         timestamp: Date.now(),
         error: true,
