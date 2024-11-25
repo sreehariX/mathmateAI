@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { GoogleOAuthProvider } from '@react-oauth/google'
@@ -19,6 +20,7 @@ try {
     <StrictMode>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID || ''}>
         <App />
+        <Analytics />
       </GoogleOAuthProvider>
     </StrictMode>
   );
