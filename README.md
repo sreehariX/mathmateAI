@@ -2,7 +2,7 @@
   
 ![mathmate-logo](https://github.com/user-attachments/assets/1d5c4d5a-3ac0-4fd2-a2e0-a47054cb9809)
 
-[Website] |  [Documentation] | [Getting Started]
+[Website] |  [Documentation] | [Getting Started] | [ProductHunt Launch]
 </div>
 
 This is the main source code repository for [mathmateAI]. It contains both the frontend React application and backend FastAPI server code .
@@ -11,7 +11,7 @@ This is the main source code repository for [mathmateAI]. It contains both the f
 [Getting Started]: #quick-start
 [Documentation]: https://mathmate-docs.vercel.app/
 [Website]:https://mathmate-ai.vercel.app/
-
+[ProductHunt Launch]:https://www.producthunt.com/posts/mathmate-2
 ## Why MathMate?
 
 - **Accuracy:** Choose gemini-1.5-pro because it is optimized for Complex reasoning tasks requiring more intelligence. Which suits for this case since we need better accuaracy also complex reasoning for math problems.
